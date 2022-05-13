@@ -9,4 +9,4 @@ include_directories(standart_classes)
 
 include(gen_lib/CMakeLists.txt)
 message(${LIB})
-add_executable(ARC main.c ${LIB})
+add_executable(ARC main.c ${LIB} arc_cash.c arc_cash.h Page.c Page.h)
