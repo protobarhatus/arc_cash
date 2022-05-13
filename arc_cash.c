@@ -88,6 +88,53 @@ static int replacePages(ArcCash * cash, int page, PageLoc loc) {
     return freed_adres;
 }
 
+bool checkOutIfArcAndDBLMiss(ArcCash * cash, int page, PageLoc iter) {
+
+    int free_adr = -1;
+    //case(i)
+    if (sizeListOpt(&cash->B1) + sizeListOpt(&cash->T1) == cash->c) {
+
+        if (sizeListOpt(&cash->T1) < cash->c) {
+
+            eraseNode(&cash->B1, lastListOpt(&cash->B1));
+            free_adr = replacePages(cash, page, iter);
+        }
+        else {
+
+            LOit to_erase = lastListOpt(&cash->T1);
+            free_adr = nodeData(to_erase)->addres;
+            eraseNode(&cash->T1, to_erase);
+        }
+
+    }
+    //case(ii)
+    if (sizeListOpt(&cash->B1) + sizeListOpt(&cash->T1) < cash->c &&
+        sizeListOpt(&cash->B1) + sizeListOpt(&cash->B2) + sizeListOpt(&cash->T1) + sizeListOpt(&cash->T2) >= cash->c) {
+
+        if (sizeListOpt(&cash->B1) + sizeListOpt(&cash->B2) + sizeListOpt(&cash->T1) + sizeListOpt(&cash->T2) == 2*cash->c) {
+
+            eraseNode(&cash->B2, lastListOpt(&cash->B2));
+        }
+        free_adr = replacePages(cash, page, iter);
+    }
+
+    PageId new_page;
+    new_page.page = page;
+    new_page.addres = (free_adr == -1 ? cash->untouched_space : free_adr);
+    pushFront(&cash->T1, &new_page);
+
+    if (free_adr == -1) {
+
+        cash->prepared_line = &cash->cash_line[cash->untouched_space * LINE_SIZE];
+        ++cash->untouched_space;
+    }
+    else
+        cash->prepared_line = &cash->cash_line[free_adr * LINE_SIZE];
+
+    return false;
+
+}
+
 bool checkOutPageArcCash(ArcCash * cash, int page) {
 
     assert(cash->prepared_line == NULL);
@@ -96,48 +143,7 @@ bool checkOutPageArcCash(ArcCash * cash, int page) {
     if (isEndHashMapIntLOit(&cash->pages_map, iter)) {
 
         //ARC miss and DBL(c) miss
-        int free_adr = -1;
-        //case(i)
-        if (sizeListOpt(&cash->B1) + sizeListOpt(&cash->T1) == cash->c) {
-
-            if (sizeListOpt(&cash->T1) < cash->c) {
-
-                eraseNode(&cash->B1, lastListOpt(&cash->B1));
-                free_adr = replacePages(cash, page, iter);
-            }
-            else {
-
-                LOit to_erase = lastListOpt(&cash->T1);
-                free_adr = nodeData(to_erase)->addres;
-                eraseNode(&cash->T1, to_erase);
-            }
-
-        }
-        //case(ii)
-        if (sizeListOpt(&cash->B1) + sizeListOpt(&cash->T1) < cash->c &&
-                sizeListOpt(&cash->B1) + sizeListOpt(&cash->B2) + sizeListOpt(&cash->T1) + sizeListOpt(&cash->T2) >= cash->c) {
-
-            if (sizeListOpt(&cash->B1) + sizeListOpt(&cash->B2) + sizeListOpt(&cash->T1) + sizeListOpt(&cash->T2) == 2*cash->c) {
-
-                eraseNode(&cash->B2, lastListOpt(&cash->B2));
-            }
-            free_adr = replacePages(cash, page, iter);
-        }
-
-        PageId new_page;
-        new_page.page = page;
-        new_page.addres = (free_adr == -1 ? cash->untouched_space : free_adr);
-        pushFront(&cash->T1, &new_page);
-
-        if (free_adr == -1) {
-
-            cash->prepared_line = &cash->cash_line[cash->untouched_space * LINE_SIZE];
-            ++cash->untouched_space;
-        }
-        else
-            cash->prepared_line = &cash->cash_line[free_adr * LINE_SIZE];
-
-        return false;
+        return checkOutIfArcAndDBLMiss(cash, page, iter);
     }
     else {
 
