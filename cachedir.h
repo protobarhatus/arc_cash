@@ -15,7 +15,7 @@ typedef enum {
 } EXCEPTION_CODES;
 
 #define NLISTS 4
-#define NO_PERMISSION_ADDR 1
+#define NO_PERMISSION_ADDR (Node *) 1
 
 typedef enum {
     T1_FICT_IDX = 0,
@@ -33,7 +33,7 @@ typedef struct {
     DirListIterator next;
     DirListIterator prev;
     FICT_IDX fict;
-    PageId *page;
+    const PageId *page;
 } Node;
 
 typedef struct {
@@ -69,5 +69,5 @@ DirListIterator endDirList();
 DirListIterator firstDirList(const DirList *list);
 DirListIterator lastDirList(const DirList *list);
 DirListIterator iterateDirList(const ComArr *common_arr, DirListIterator idx);
-PageId *nodeData(const ComArr *common_arr, DirListIterator idx);
+const PageId *nodeData(const ComArr *common_arr, DirListIterator idx);
 bool isInDirList(const DirList *list, DirListIterator idx);

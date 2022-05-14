@@ -2,12 +2,12 @@
 
 #define DUMP_POSITION(comment_str)                                          \
     do {                                                                    \
-        printf("\n%s: %s: %s", __FILE__, __PRETTY_FUNCTION__, __LINE__);    \
+        printf("\n%s : %s : %d", __FILE__, __PRETTY_FUNCTION__, __LINE__);  \
         printf(comment_str);                                                \
     } while (0);
 
-static DirListIterator insertBeforeNS(DirList *list, DirListIterator idx, PageId *page);
-static DirListIterator insertAfterNS(DirList *list, DirListIterator idx, PageId *page);
+static DirListIterator insertBeforeNS(DirList *list, DirListIterator idx, const PageId *page);
+static DirListIterator insertAfterNS(DirList *list, DirListIterator idx, const PageId *page);
 static void deleteNodeNS(DirList *list, DirListIterator idx);
 
 ComArr initComArr(int c) {
@@ -17,12 +17,12 @@ ComArr initComArr(int c) {
 #ifdef SAFEMODE
     if (c >= INT_MAX / 2 - NLISTS) {
         DUMP_POSITION("\nmemory error: cache capacity exceeds possible max value\n\n");
-        destrComArr(common_arr);
+        destrComArr(&common_arr);
         return common_arr;
     }
     if (c <= 0) {
         DUMP_POSITION("\nmemory error: invalid cache capacity value\n\n");
-        destrComArr(common_arr);
+        destrComArr(&common_arr);
         return common_arr;
     }
 #endif
@@ -31,7 +31,7 @@ ComArr initComArr(int c) {
 #ifdef SAFEMODE
     if (common_arr.data == NULL) {
         DUMP_POSITION("\nmemory error: failed to allocate memory for cache directory\n\n");
-        destrComArr(common_arr);
+        destrComArr(&common_arr);
         return common_arr;
     }
 #endif
@@ -62,7 +62,7 @@ ComArr copyComArr(const ComArr *src) {
 #ifdef SAFEMODE
     if (new_com_arr.data == NULL) {
         DUMP_POSITION("\nmemory error: failed to allocate memory for copied cache directory\n\n");
-        destrComArr(new_com_arr);
+        destrComArr(&new_com_arr);
         return new_com_arr;
     }
 #endif
@@ -93,7 +93,7 @@ void destrComArr(ComArr *common_arr) {
 DirList getT1(const ComArr *common_arr) {
     assert(common_arr);
     DirList list = {};
-    list.common_arr = common_arr;
+    list.common_arr = (ComArr *) common_arr;
     list.fict = T1_FICT_IDX;
     list.size = 0;
     return list;
@@ -102,7 +102,7 @@ DirList getT1(const ComArr *common_arr) {
 DirList getB1(const ComArr *common_arr) {
     assert(common_arr);
     DirList list = {};
-    list.common_arr = common_arr;
+    list.common_arr = (ComArr *) common_arr;
     list.fict = B1_FICT_IDX;
     list.size = 0;
     return list;
@@ -111,7 +111,7 @@ DirList getB1(const ComArr *common_arr) {
 DirList getT2(const ComArr *common_arr) {
     assert(common_arr);
     DirList list = {};
-    list.common_arr = common_arr;
+    list.common_arr = (ComArr *) common_arr;
     list.fict = T2_FICT_IDX;
     list.size = 0;
     return list;
@@ -120,7 +120,7 @@ DirList getT2(const ComArr *common_arr) {
 DirList getB2(const ComArr *common_arr) {
     assert(common_arr);
     DirList list = {};
-    list.common_arr = common_arr;
+    list.common_arr = (ComArr *) common_arr;
     list.fict = B2_FICT_IDX;
     list.size = 0;
     return list;
@@ -205,11 +205,15 @@ void eraseNode(DirList *list, DirListIterator idx) {            // should be che
         DUMP_POSITION("\nruntime error: free node deletion requested\n\n");
         return;
     }
+    if (!isInDirList(list, idx)) {
+        DUMP_POSITION("\nruntime error: erased node and list incongruity\n\n");
+        return;
+    }
 #endif
     deleteNodeNS(list, idx);
 }
 
-PageId *nodeData(const ComArr *common_arr, DirListIterator idx) {
+const PageId *nodeData(const ComArr *common_arr, DirListIterator idx) {
     assert(common_arr);
 
 #ifdef SAFEMODE
@@ -255,7 +259,7 @@ void moveNodeToBegin(DirList *dest_list, DirListIterator src_idx) {
     data[data[src_idx].next].prev = data[src_idx].prev;
     data[data[src_idx].prev].next = data[src_idx].next;
     data[src_idx].next = data[dest_list->fict].next;
-    data[src_idx].prev = dest_list->fict;
+    data[src_idx].prev = data[src_idx].fict = dest_list->fict;
     data[data[dest_list->fict].next].prev = src_idx;
     data[dest_list->fict].next = src_idx;
 }
@@ -278,12 +282,12 @@ void moveNodeToEnd(DirList *dest_list, DirListIterator src_idx) {
     data[data[src_idx].next].prev = data[src_idx].prev;
     data[data[src_idx].prev].next = data[src_idx].next;
     data[src_idx].prev = data[dest_list->fict].prev;
-    data[src_idx].next = dest_list->fict;
+    data[src_idx].next = data[src_idx].fict = dest_list->fict;
     data[data[dest_list->fict].prev].next = src_idx;
     data[dest_list->fict].prev = src_idx;
 }
 
-static DirListIterator insertBeforeNS(DirList *list, DirListIterator idx, PageId *page) {
+static DirListIterator insertBeforeNS(DirList *list, DirListIterator idx, const PageId *page) {
     Node *data = list->common_arr->data;
     ComArr *common_arr = list->common_arr;
     DirListIterator new_idx = -1;
@@ -293,14 +297,14 @@ static DirListIterator insertBeforeNS(DirList *list, DirListIterator idx, PageId
     data[new_idx].prev = data[idx].prev;
     data[new_idx].next = idx;
     data[new_idx].page = page;
-    data[new_idx].fict = data[idx].fict;
+    data[new_idx].fict = list->fict;
     data[idx].prev = new_idx;
 
     list->size += 1;
     return new_idx;
 }
 
-static DirListIterator insertAfterNS(DirList *list, DirListIterator idx, PageId *page) {
+static DirListIterator insertAfterNS(DirList *list, DirListIterator idx, const PageId *page) {
     Node *data = list->common_arr->data;
     ComArr *common_arr = list->common_arr;
     DirListIterator new_idx = -1;
@@ -310,7 +314,7 @@ static DirListIterator insertAfterNS(DirList *list, DirListIterator idx, PageId 
     data[new_idx].next = data[idx].next;
     data[new_idx].prev = idx;
     data[new_idx].page = page;
-    data[new_idx].fict = data[idx].fict;
+    data[new_idx].fict = list->fict;
     data[idx].next = new_idx;
 
     list->size += 1;
