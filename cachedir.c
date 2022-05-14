@@ -1,5 +1,8 @@
 #include "cachedir.h"
 
+#define NLISTS 4
+#define NO_PERMISSION_ADDR (Node *) 1
+
 #define DUMP_POSITION(comment_str)                                          \
     do {                                                                    \
         printf("\n%s : %s : %d", __FILE__, __PRETTY_FUNCTION__, __LINE__);  \
@@ -193,7 +196,7 @@ DirListIterator iterateDirList(const ComArr *common_arr, DirListIterator idx) {
     return (next < NLISTS) ? endDirList() : next;
 }
 
-void eraseNode(DirList *list, DirListIterator idx) {            // should be checked carefully
+void eraseNode(DirList *list, DirListIterator idx) {
     assert(list);
 
 #ifdef SAFEMODE
