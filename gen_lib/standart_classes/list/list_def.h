@@ -168,6 +168,7 @@ static inline List##UCN0##Iterator eraseList##UCN0##Node(List##UCN0##Iterator it
         it->list->last_element = it->prev;                                                                                   \
     takeOutList##UCN0##Node(it);                                                                                             \
     destructList##UCN0##Node(it);                                                                                            \
+    free(it);                                                                                                                \
     return ret;                                                                                                              \
 }                                                                                                                            \
                                                                                                                              \

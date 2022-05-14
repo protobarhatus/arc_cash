@@ -5,7 +5,7 @@
 #include "list/list.h"
 
 MAKE_HASHMAP(Int, SIMPLE, SIMPLE, Int, SIMPLE, SIMPLE)
-
+#define HM_INT_STANDART_CACHE 0x1
 
 HashMapIntInt defaultHashMapIntInt();
 

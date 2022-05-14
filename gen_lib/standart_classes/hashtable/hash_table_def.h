@@ -43,6 +43,8 @@ static inline HashTable##UCN0##Iterator atHashTable##UCN0(HashTable##UCN0 * tabl
                                                                                                                     \
 static inline HashTable##UCN0##Iterator endHashTable##UCN0(HashTable##UCN0 * table);                                \
                                                                                                                     \
+static inline bool isEndHashTable##UCN0(HashTable##UCN0 * table, HashTable##UCN0##Iterator it);                     \
+                                                                                                                    \
 static inline HashTable##UCN0##ConstIterator catHashTable##UCN0(const HashTable##UCN0 * table, UCN0##_Ref key);     \
                                                                                                                     \
 static inline HashTable##UCN0##ConstIterator cendHashTable##UCN0(const HashTable##UCN0 * table);                    \
@@ -148,7 +150,11 @@ static inline HashTable##UCN0##Iterator atHashTable##UCN0(HashTable##UCN0 * tabl
 }                                                                                                                  \
 static inline HashTable##UCN0##Iterator endHashTable##UCN0(HashTable##UCN0 * table)                                \
 {                                                                                                                  \
-    return defaultPairIntList##UCN0##IteratorRVLV(table->table_size, NULL);                                        \
+    return defaultPairIntList##UCN0##IteratorRV(table->table_size, NULL);                                          \
+}                                                                                                                  \
+static inline bool isEndHashTable##UCN0(HashTable##UCN0 * table, HashTable##UCN0##Iterator it)                     \
+{                                                                                                                  \
+    return it.first == table->table_size && it.second == NULL;                                                     \
 }                                                                                                                  \
                                                                                                                    \
 static inline HashTable##UCN0##ConstIterator catHashTable##UCN0(const HashTable##UCN0 * table, UCN0##_Ref key)     \

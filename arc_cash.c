@@ -10,7 +10,7 @@ ArcCash defaultArcCash(int c, int hashmap_length) {
     res.c = c;
     res.cash_line = calloc(LINE_SIZE, sizeof(char));
     res.prepared_line = NULL;
-    res.pages_map = makeHashMapIntDlit(hashmap_length, 0x1);
+    res.pages_map = makeHashMapIntDlit(hashmap_length, HM_INT_STANDART_CACHE);
     res.untouched_space = 0;
     assert(res.cash_line != NULL);
 
@@ -45,33 +45,46 @@ static int max(int a, int b) {
 
 typedef HashMapIntDlitIterator PageLoc;
 
-static Dlit iterData(PageLoc iter)
-{
+static Dlit iterData(PageLoc iter) {
+
     return iter.second->data->second;
+}
+
+bool isPagelocInDirList(ArcCash * cash, PageLoc x, const DirList * dir) {
+
+    return !isEndHashMapIntDlit(&cash->pages_map, x) &&
+            isInDirList(iterData(x), dir);
 }
 //возвращает адрес освободившегося места в линии.
 static int replacePages(ArcCash * cash, int page, PageLoc loc) {
 
     int freed_adres;
-    if (sizeDirList(&cash->T1) >= 1 && ((isInDirList(iterData(loc), &cash->B2) && sizeDirList(&cash->T1) == cash->p)
+    if (sizeDirList(&cash->T1) >= 1 && ((isPagelocInDirList(cash, loc, &cash->B2) && sizeDirList(&cash->T1) == cash->p)
             || (sizeDirList(&cash->T1) > cash->p))) {
         Dlit moved = lastDirList(&cash->T1);
-        freed_adres = nodeData(cash->dlc_store, moved)->addres;
+        freed_adres = nodeData(cash->dlc_store, moved)->address;
         moveNodeToBegin(&cash->B2, moved);
 
     }
     else {
         Dlit moved = lastDirList(&cash->T2);
-        freed_adres = nodeData(cash->dlc_store, moved)->addres;
+        freed_adres = nodeData(cash->dlc_store, moved)->address;
         moveNodeToBegin(&cash->B2, moved);
     }
     return freed_adres;
 }
 
-void addNewPageToT1(ArcCash * cash, PageId page)
-{
+void addNewPageToT1(ArcCash * cash, PageId page) {
+
     Dlit it = pushFront(&cash->T1, &page);
     addElementHashMapIntDlit(&cash->pages_map, page.page, &it);
+}
+
+void deletePageFromDLC(ArcCash * cash, DirList * list, Dlit page) {
+
+    int page_num = nodeData(cash->dlc_store, page)->page;
+    eraseFromHashMapIntDlit(&cash->pages_map, atHashMapIntDlit(&cash->pages_map, page_num));
+    eraseNode(list, page);
 }
 
 bool checkOutIfArcAndDBLMiss(ArcCash * cash, int page, PageLoc iter) {
@@ -82,14 +95,14 @@ bool checkOutIfArcAndDBLMiss(ArcCash * cash, int page, PageLoc iter) {
 
         if (sizeDirList(&cash->T1) < cash->c) {
 
-            eraseNode(&cash->B1, lastDirList(&cash->B1));
+            deletePageFromDLC(cash, &cash->B1, lastDirList(&cash->B1));
             free_adr = replacePages(cash, page, iter);
         }
         else {
 
             Dlit to_erase = lastDirList(&cash->T1);
-            free_adr = nodeData(cash->dlc_store, to_erase)->addres;
-            eraseNode(&cash->T1, to_erase);
+            free_adr = nodeData(cash->dlc_store, to_erase)->address;
+            deletePageFromDLC(cash, &cash->T1, to_erase);
         }
 
     }
@@ -99,14 +112,14 @@ bool checkOutIfArcAndDBLMiss(ArcCash * cash, int page, PageLoc iter) {
 
         if (sizeDirList(&cash->B1) + sizeDirList(&cash->B2) + sizeDirList(&cash->T1) + sizeDirList(&cash->T2) == 2*cash->c) {
 
-            eraseNode(&cash->B2, lastDirList(&cash->B2));
+            deletePageFromDLC(cash, &cash->B2, lastDirList(&cash->B2));
         }
         free_adr = replacePages(cash, page, iter);
     }
 
     PageId new_page;
     new_page.page = page;
-    new_page.addres = (free_adr == -1 ? cash->untouched_space : free_adr);
+    new_page.address = (free_adr == -1 ? cash->untouched_space : free_adr);
     addNewPageToT1(cash, new_page);
 
     if (free_adr == -1) {
@@ -137,7 +150,7 @@ bool checkOutPageArcCash(ArcCash * cash, int page) {
         if (isInDirList(loc, &cash->T1) || isInDirList(loc, &cash->T2)) {
 
             moveNodeToBegin(&cash->T2, loc);
-            cash->prepared_line = &cash->cash_line[nodeData(cash->dlc_store, loc)->addres * LINE_SIZE];
+            cash->prepared_line = &cash->cash_line[nodeData(cash->dlc_store, loc)->address * LINE_SIZE];
             return true;
         }
         if (isInDirList(loc, &cash->B1)) {
@@ -147,7 +160,7 @@ bool checkOutPageArcCash(ArcCash * cash, int page) {
             int free_adr = replacePages(cash, page, iter);
             moveNodeToBegin(&cash->T2, loc);
             cash->prepared_line = &cash->cash_line[free_adr * LINE_SIZE];
-            nodeData(cash->dlc_store, loc)->addres = free_adr;
+            nodeData(cash->dlc_store, loc)->address = free_adr;
             return false;
         }
         if (isInDirList(loc, &cash->B2)) {
@@ -157,7 +170,7 @@ bool checkOutPageArcCash(ArcCash * cash, int page) {
             int free_adr = replacePages(cash, page, iter);
             moveNodeToBegin(&cash->T2, loc);
             cash->prepared_line = &cash->cash_line[free_adr * LINE_SIZE];
-            nodeData(cash->dlc_store, loc)->addres = free_adr;
+            nodeData(cash->dlc_store, loc)->address = free_adr;
             return false;
         }
         //должны реализоваться верхние случаи

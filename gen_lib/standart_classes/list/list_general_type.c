@@ -105,6 +105,7 @@ ListIterator eraseListNode(ListIterator it)
         it->list->last_element = it->prev;
     takeOutListNode(it);
     destructListNode(it);
+    free(it);
     return ret;
 }
 

@@ -94,7 +94,11 @@ HashTableIterator atHashTable(HashTable * table, GeneralType_Ref key)
 }
 HashTableIterator endHashTable(HashTable * table)
 {
-    return defaultPairIntListGeneralTypeIteratorRVLV(table->table_size, NULL);
+    return defaultPairIntListGeneralTypeIteratorRV(table->table_size, NULL);
+}
+bool isEndHashTable(HashTable * table, HashTableIterator it)
+{
+    return it.first == table->table_size && it.second == NULL;
 }
 
 HashTableConstIterator catHashTable(const HashTable * table, GeneralType_Ref key)

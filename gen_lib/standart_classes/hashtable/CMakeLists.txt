@@ -6,7 +6,8 @@ set(HASH_TABLE hash_table_general_type.c
         hashmap_general_type.h
         hashmap_general_type.c
         hashmap_def.h
-        hashmap.h)
+        hashmap.h
+        hashmap.c)
 
 
 list(TRANSFORM HASH_TABLE PREPEND hashtable/)

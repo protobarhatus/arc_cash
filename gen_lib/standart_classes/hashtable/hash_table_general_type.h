@@ -36,6 +36,8 @@ HashTableIterator atHashTable(HashTable * table, GeneralType_Ref key);
 
 HashTableIterator endHashTable(HashTable * table);
 
+bool isEndHashTable(HashTable * table, HashTableIterator it);
+
 HashTableConstIterator catHashTable(const HashTable * table, GeneralType_Ref key);
 
 HashTableConstIterator cendHashTable(const HashTable * table);
