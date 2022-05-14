@@ -22,9 +22,9 @@ getting fresh nodes.
 #include <limits.h>
 #include <stdbool.h>
 
-//type that represent page and its location in cache
+// type representing the page and its location in the cache
 typedef struct {
-    int page, addres;
+    int page, address;
 } PageId;
 
 // enables simple overflow, invalid arguments checks etc.
@@ -53,20 +53,19 @@ typedef int DirListIterator;
 // only pointers to PageId are used, no actual construction or destruction performed
 
 typedef struct {
-    DirListIterator next;
-    DirListIterator prev;
+    DirListIterator next, prev;
     FICT_IDX fict;          // a marker of belonging to one of 4 lists
     PageId page;
 } Node;
 
 typedef struct {
+    int sizes[4];
     int capacity;
     DirListIterator free_list_head;     // an iterator of free-node-list head
     Node *data;
 } ComArr;
 
 typedef struct {
-    int size;
     DirListIterator fict;       // an iterator of a fictive node attached to this list 
     ComArr *common_arr;
 } DirList;
@@ -93,4 +92,4 @@ DirListIterator firstDirList(const DirList *list);      // list's head's iterato
 DirListIterator lastDirList(const DirList *list);       // ...and the tail's one
 DirListIterator iterateDirList(const ComArr *common_arr, DirListIterator idx);      // get the iterator of the next node in its list
 PageId *nodeData(ComArr *common_arr, DirListIterator idx);      // get the PageId pointer through the iterator of the node
-bool isInDirList(DirListIterator idx, const DirList *list);     // check the beonging of some node to some list
+bool isInDirList(DirListIterator idx, const DirList *list);     // check the belonging of some node to some list

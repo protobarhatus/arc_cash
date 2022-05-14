@@ -14,7 +14,7 @@ static DirListIterator insertAfterNS(DirList *list, DirListIterator idx, const P
 static void deleteNodeNS(DirList *list, DirListIterator idx);
 
 ComArr initComArr(int c) {
-    ComArr common_arr = {};
+    ComArr common_arr = {};         // sizes = {0, 0, 0, 0} by default
     common_arr.capacity = 2 * c + NLISTS;
 
 #ifdef SAFEMODE
@@ -60,6 +60,7 @@ ComArr copyComArr(const ComArr *src) {
     ComArr new_com_arr = {};
     new_com_arr.capacity = src->capacity;
     new_com_arr.free_list_head = src->free_list_head;
+    memcpy(new_com_arr.sizes, src->sizes, sizeof(int) * NLISTS);
 
     new_com_arr.data = (Node *) malloc (sizeof(Node) * new_com_arr.capacity);
 #ifdef SAFEMODE
@@ -87,6 +88,7 @@ void destrComArr(ComArr *common_arr) {
     }
 #endif
     common_arr->capacity = common_arr->free_list_head = DESTROYED_COM_ARR;
+    memset(common_arr->sizes, DESTROYED_COM_ARR, NLISTS * sizeof(int));
     if (common_arr->data) {
         free(common_arr->data);
     }
@@ -98,7 +100,6 @@ DirList getT1(const ComArr *common_arr) {
     DirList list = {};
     list.common_arr = (ComArr *) common_arr;
     list.fict = T1_FICT_IDX;
-    list.size = 0;
     return list;
 }
 
@@ -107,7 +108,6 @@ DirList getB1(const ComArr *common_arr) {
     DirList list = {};
     list.common_arr = (ComArr *) common_arr;
     list.fict = B1_FICT_IDX;
-    list.size = 0;
     return list;
 }
 
@@ -116,7 +116,6 @@ DirList getT2(const ComArr *common_arr) {
     DirList list = {};
     list.common_arr = (ComArr *) common_arr;
     list.fict = T2_FICT_IDX;
-    list.size = 0;
     return list;
 }
 
@@ -125,7 +124,6 @@ DirList getB2(const ComArr *common_arr) {
     DirList list = {};
     list.common_arr = (ComArr *) common_arr;
     list.fict = B2_FICT_IDX;
-    list.size = 0;
     return list;
 }
 
@@ -137,7 +135,7 @@ DirList copyDirList(const DirList *src) {
 
 int sizeDirList(const DirList *list) {
     assert(list);
-    return list->size;
+    return list->common_arr->sizes[list->fict];
 }
 
 DirListIterator pushBack(DirList *list, const PageId *page) {
@@ -170,12 +168,12 @@ DirListIterator endDirList() {
 
 DirListIterator firstDirList(const DirList *list) {
     assert(list);
-    return (list->size > 0) ? list->common_arr->data[list->fict].next : endDirList();
+    return (sizeDirList(list) > 0) ? list->common_arr->data[list->fict].next : endDirList();
 }
 
 DirListIterator lastDirList(const DirList *list) {
     assert(list);
-    return (list->size > 0) ? list->common_arr->data[list->fict].prev : endDirList();
+    return (sizeDirList(list) > 0) ? list->common_arr->data[list->fict].prev : endDirList();
 }
 
 DirListIterator iterateDirList(const ComArr *common_arr, DirListIterator idx) {
@@ -259,6 +257,8 @@ void moveNodeToBegin(DirList *dest_list, DirListIterator src_idx) {
     }
 #endif
 
+    dest_list->common_arr->sizes[dest_list->fict] += 1;
+    dest_list->common_arr->sizes[data[src_idx].fict] -= 1;
     data[data[src_idx].next].prev = data[src_idx].prev;
     data[data[src_idx].prev].next = data[src_idx].next;
     data[src_idx].next = data[dest_list->fict].next;
@@ -282,6 +282,8 @@ void moveNodeToEnd(DirList *dest_list, DirListIterator src_idx) {
     }
 #endif
 
+    dest_list->common_arr->sizes[dest_list->fict] += 1;
+    dest_list->common_arr->sizes[data[src_idx].fict] -= 1;
     data[data[src_idx].next].prev = data[src_idx].prev;
     data[data[src_idx].prev].next = data[src_idx].next;
     data[src_idx].prev = data[dest_list->fict].prev;
@@ -303,7 +305,7 @@ static DirListIterator insertBeforeNS(DirList *list, DirListIterator idx, const 
     data[new_idx].fict = list->fict;
     data[idx].prev = new_idx;
 
-    list->size += 1;
+    list->common_arr->sizes[list->fict] += 1;
     return new_idx;
 }
 
@@ -320,7 +322,7 @@ static DirListIterator insertAfterNS(DirList *list, DirListIterator idx, const P
     data[new_idx].fict = list->fict;
     data[idx].next = new_idx;
 
-    list->size += 1;
+    list->common_arr->sizes[list->fict] += 1;
     return new_idx;
 }
 
@@ -334,7 +336,7 @@ static void deleteNodeNS(DirList *list, DirListIterator idx) {
     common_arr->free_list_head = idx;
     data[idx].fict = FREE_NODE;
 
-    list->size -= 1;
+    list->common_arr->sizes[list->fict] -= 1;
 }
 
 #undef DUMP_POSITION
