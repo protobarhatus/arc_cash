@@ -208,7 +208,7 @@ void eraseNode(DirList *list, DirListIterator idx) {
         DUMP_POSITION("\nruntime error: free node deletion requested\n\n");
         return;
     }
-    if (!isInDirList(list, idx)) {
+    if (!isInDirList(idx, list)) {
         DUMP_POSITION("\nruntime error: erased node and list incongruity\n\n");
         return;
     }
@@ -216,7 +216,7 @@ void eraseNode(DirList *list, DirListIterator idx) {
     deleteNodeNS(list, idx);
 }
 
-const PageId *nodeData(const ComArr *common_arr, DirListIterator idx) {
+PageId *nodeData(ComArr *common_arr, DirListIterator idx) {
     assert(common_arr);
 
 #ifdef SAFEMODE
@@ -229,10 +229,10 @@ const PageId *nodeData(const ComArr *common_arr, DirListIterator idx) {
         return NULL;
     }
 #endif
-    return common_arr->data[idx].page;
+    return &common_arr->data[idx].page;
 }
 
-bool isInDirList(const DirList *list, DirListIterator idx) {
+bool isInDirList(DirListIterator idx, const DirList *list) {
     assert(list);
 
 #ifdef SAFEMODE
@@ -299,7 +299,7 @@ static DirListIterator insertBeforeNS(DirList *list, DirListIterator idx, const 
     common_arr->free_list_head = data[common_arr->free_list_head].next;
     data[new_idx].prev = data[idx].prev;
     data[new_idx].next = idx;
-    data[new_idx].page = page;
+    data[new_idx].page = *page;
     data[new_idx].fict = list->fict;
     data[idx].prev = new_idx;
 
@@ -316,7 +316,7 @@ static DirListIterator insertAfterNS(DirList *list, DirListIterator idx, const P
     common_arr->free_list_head = data[common_arr->free_list_head].next;
     data[new_idx].next = data[idx].next;
     data[new_idx].prev = idx;
-    data[new_idx].page = page;
+    data[new_idx].page = *page;
     data[new_idx].fict = list->fict;
     data[idx].next = new_idx;
 

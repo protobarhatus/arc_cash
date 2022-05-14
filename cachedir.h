@@ -22,6 +22,11 @@ getting fresh nodes.
 #include <limits.h>
 #include <stdbool.h>
 
+//type that represent page and its location in cache
+typedef struct {
+    int page, addres;
+} PageId;
+
 // enables simple overflow, invalid arguments checks etc.
 // undef to slightly boost most of the funcs performed
 #define SAFEMODE
@@ -51,7 +56,7 @@ typedef struct {
     DirListIterator next;
     DirListIterator prev;
     FICT_IDX fict;          // a marker of belonging to one of 4 lists
-    const PageId *page;
+    PageId page;
 } Node;
 
 typedef struct {
@@ -87,5 +92,5 @@ DirListIterator endDirList();       // invalid pointer, showing that the end of 
 DirListIterator firstDirList(const DirList *list);      // list's head's iterator
 DirListIterator lastDirList(const DirList *list);       // ...and the tail's one
 DirListIterator iterateDirList(const ComArr *common_arr, DirListIterator idx);      // get the iterator of the next node in its list
-const PageId *nodeData(const ComArr *common_arr, DirListIterator idx);      // get the PageId pointer through the iterator of the node
-bool isInDirList(const DirList *list, DirListIterator idx);     // check the beonging of some node to some list
+PageId *nodeData(ComArr *common_arr, DirListIterator idx);      // get the PageId pointer through the iterator of the node
+bool isInDirList(DirListIterator idx, const DirList *list);     // check the beonging of some node to some list
