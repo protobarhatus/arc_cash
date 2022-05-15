@@ -189,6 +189,8 @@ void moveNodeToEndList(List * list, ListIterator node)
 {
     if (list->size == 1)
         return;
+    if (node == list->last_element)
+        return;
     if (list->first_element == node)
         list->first_element = node->next;
     takeOutListNode(node);

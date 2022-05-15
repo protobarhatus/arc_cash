@@ -9,6 +9,6 @@ include_directories(standart_classes)
 
 include(gen_lib/CMakeLists.txt)
 message(${LIB})
-add_executable(ARC main.c ${LIB} arc_cache.c arc_cache.h Page.c Page.h cachedir.h cachedir.c AutoChecker.c AutoChecker.h fcr_cache.c fcr_cache.h)
+add_executable(ARC main.c ${LIB} arc_cache.c arc_cache.h Page.c Page.h cachedir.h cachedir.c AutoChecker.c AutoChecker.h fcr_cache.c fcr_cache.h lru_cache.h lru_cache.c lru_main.c)
 
 target_link_libraries(ARC m)

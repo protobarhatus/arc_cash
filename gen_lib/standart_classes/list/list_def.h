@@ -252,6 +252,8 @@ static inline void moveNodeToEndList##UCN0(List##UCN0 * list, List##UCN0##Iterat
 {                                                                                                                            \
     if (list->size == 1)                                                                                                     \
         return;                                                                                                              \
+    if (node == list->last_element)                                                                                          \
+        return;                                                                                                              \
     if (list->first_element == node)                                                                                         \
         list->first_element = node->next;                                                                                    \
     takeOutList##UCN0##Node(node);                                                                                           \
