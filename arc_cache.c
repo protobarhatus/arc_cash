@@ -66,7 +66,7 @@ static int replacePages(ArcCache * cache, int page, PageLoc loc) {
             || (sizeDirList(&cache->T1) > cache->p))) {
         Dlit moved = lastDirList(&cache->T1);
         freed_address = nodeData(cache->dbl_store, moved)->address;
-        moveNodeToBegin(&cache->B2, moved);
+        moveNodeToBegin(&cache->B1, moved);
 
     }
     else {
@@ -110,7 +110,7 @@ bool checkOutIfArcAndDBLMiss(ArcCache * cache, int page, PageLoc iter) {
 
     }
     //case(ii)
-    if (sizeDirList(&cache->B1) + sizeDirList(&cache->T1) < cache->c &&
+    else if (sizeDirList(&cache->B1) + sizeDirList(&cache->T1) < cache->c &&
         sizeDirList(&cache->B1) + sizeDirList(&cache->B2) + sizeDirList(&cache->T1) + sizeDirList(&cache->T2) >= cache->c) {
 
         if (sizeDirList(&cache->B1) + sizeDirList(&cache->B2) + sizeDirList(&cache->T1) + sizeDirList(&cache->T2) == 2*cache->c) {
