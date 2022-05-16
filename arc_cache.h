@@ -33,7 +33,6 @@ MAKE_HASHMAP(Int, SIMPLE, SIMPLE, Dlit, SIMPLE, STRUCT)
 #define LINE_SIZE 60
 
 struct ArcCache_struct {
-
     HashMapIntDlit pages_map;
     DirList B1, B2, T1, T2;
     char * cache_line;
@@ -41,28 +40,26 @@ struct ArcCache_struct {
     int c;
 
     char * prepared_line;
-    //структура данных где хранятся данные для DBL(2). Работа при этом идет с B1, B2, T1, T2 - интерфейсами ComArr
+
+    // структура данных где хранятся данные для DBL(2). Работа при этом идет с B1, B2, T1, T2 - интерфейсами ComArr
     ComArr * dbl_store;
     int untouched_space;
-
-
 };
 typedef struct ArcCache_struct ArcCache;
 
-//hashmap_length is how much buckets are allowed in hashmap inside cache. the bigger value the better
-//the perfomance (if page's numbers can be bigger then hashmap_length), but muuuch more memory it takes
+// hashmap_length is how much buckets are allowed in hashmap inside cache. the bigger value the better
+// the perfomance (if page's numbers can be bigger then hashmap_length), but muuuch more memory it takes
 ArcCache defaultArcCache(int c, int hashmap_length);
 void destructArcCache(ArcCache * cache);
-
-
 
 bool checkOutPageArcCache(ArcCache * cache, int page);
 
 char * readPageArcCache(ArcCache * cache);
 void writePageArcCache(ArcCache * cache, char * page);
+
 //вызывается после checkOut, если кэш работает в холостую, т е нет реальных данных для записи/чтения
 void deactArcCache(ArcCache * cache);
 
 void printfCacheState(const ArcCache * cache);
 
-#endif //FIBONACHY_NIM_ARC_cache_H
+#endif // FIBONACHY_NIM_ARC_cache_H
