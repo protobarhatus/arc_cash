@@ -3,7 +3,7 @@
 #include "user_interacts/user_interactions.h"
 #include "AutoChecker.h"
 
-// #define DEMONSTRATION_MODE
+#define DEMONSTRATION_MODE
 // #define FLAW_CONTROL
 
 int main(int argc, char *argv[]) {
@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
 #ifdef DEMONSTRATION_MODE
     output_file = fopen(argv[1], "a");
     assert(output_file);
-    fprintf(output_file, "%9.d\t\t\t%.6d\t\t\t%.2f", c, hits, 100 * ((float) hits) / ((float) nreqs));
+    fprintf(output_file, "%9.d               %.6d              %.2f", c, hits, 100 * ((float) hits) / ((float) nreqs));
     fclose(output_file);
 #else
     printf("%d", hits);
