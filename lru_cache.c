@@ -1,5 +1,4 @@
 #include "lru_cache.h"
-#include "assert.h"
 
 LRUCache defaultLRUCache(int cache_size, int hash_awaylable_amount)
 {

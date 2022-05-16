@@ -1,6 +1,7 @@
 #ifndef FIBONACHY_NIM_LRU_CACHE_H
 #define FIBONACHY_NIM_LRU_CACHE_H
 
+#include <assert.h>
 #include "Page.h"
 #include "hashtable/hashmap.h"
 #include "list/list.h"

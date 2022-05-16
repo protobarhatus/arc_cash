@@ -59,7 +59,7 @@ typedef struct {
 } Node;
 
 typedef struct {
-    int sizes[4];
+    int sizes[4];           // respective list's sizes
     int capacity;
     DirListIterator free_list_head;     // an iterator of free-node-list head
     Node *data;
