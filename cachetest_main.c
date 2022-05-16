@@ -43,7 +43,34 @@ int main(int argc, char *argv[]) {
             }
         }
         if (!found) {
-            fprintf(res_file, "\n\n\n%s: no test with such name provided\n\n\n", argv[i]);
+            char com_line[48] = {}, path[128] = {};
+            FILE *user_file = NULL;
+            sprintf(path, "tests/%s", argv[i]);
+            user_file = fopen(path, "r");
+            if (user_file == NULL) {
+                fprintf(res_file, "\n\n%s: no such data file in the <tests> directory\n\n", argv[i]);
+                continue;
+            }
+
+            fprintf(res_file, "<<<%s>>>:", argv[i]);
+            fprintf(res_file, "\n\nLRU performance:\n\nCache capacity           Hits          Hit ratio (%%)\n");
+            sprintf(com_line, "./LRU test_results.txt < tests/%s", argv[i]);
+            fclose(res_file);
+            system(com_line);
+            res_file = fopen("test_results.txt", "a");
+            fprintf(res_file, "\n\n\nFRC performance:\n\nCache capacity           Hits          Hit ratio (%%)\n");
+            sprintf(com_line, "./FRC test_results.txt < tests/%s", argv[i]);
+            fclose(res_file);
+            system(com_line);
+            res_file = fopen("test_results.txt", "a");
+            fprintf(res_file, "\n\n\nARC performance:\n\nCache capacity           Hits          Hit ratio (%%)\n");
+            sprintf(com_line, "./ARC test_results.txt < tests/%s", argv[i]);
+            fclose(res_file);
+            system(com_line);
+            res_file = fopen("test_results.txt", "a");
+            fputs("\n\n--------------------------------------------------------\n\n\n", res_file);
+
+            fclose(user_file);
         }
     }
 

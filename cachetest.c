@@ -30,5 +30,5 @@ void run_test(TEST_IDENT ident, FILE **res_file) {
         system(com_line);
         *res_file = fopen("test_results.txt", "a");
     }
-    fputs("\n\n\n\n", *res_file);
+    fputs("\n\n--------------------------------------------------------\n\n\n", *res_file);
 }
