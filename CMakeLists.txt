@@ -6,9 +6,9 @@ include_directories(gen_lib)
 include_directories(standart_classes)
 
 include(gen_lib/CMakeLists.txt)
-add_executable(ARC ${LIB} arc_main.c arc_cache.c arc_cache.h Page.c Page.h cachedir.h cachedir.c AutoChecker.c AutoChecker.h)
+add_executable(ARC ${LIB} arc_main.c arc_cache.c arc_cache.h Page.c Page.h cachedir.h cachedir.c)
 add_executable(LRU ${LIB} lru_main.c lru_cache.c lru_cache.h Page.c Page.h)
-add_executable(FRC ${LIB} frc_main.c frc_cache.c frc_cache.h Page.c Page.h cachedir.h cachedir.c AutoChecker.c Autochecker.h)
+add_executable(FRC ${LIB} frc_main.c frc_cache.c frc_cache.h Page.c Page.h cachedir.h cachedir.c)
 add_executable(testgen ${LIB} testgen_main.c testgen.c testgen.h test_idents.h)
 add_executable(test ${LIB} cachetest_main.c cachetest.c cachetest.h test_idents.h)
 
