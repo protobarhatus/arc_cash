@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TESTGEN_INCLUDED
+#define TESTGEN_INCLUDED
 
 #include <stdlib.h>
 #include <time.h>
@@ -17,3 +18,5 @@ void testOutburstsFar();
 void testSetsOutbursts();
 void testBasePulse();
 void testDiapPulse();
+
+#endif

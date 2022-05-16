@@ -1,12 +1,11 @@
-
 #ifndef FIBONACHY_NIM_AUTOCHECKER_H
 #define FIBONACHY_NIM_AUTOCHECKER_H
 
-#include "arc_cache.h"
 #include "hashtable/hash_table.h"
-#include "fcr_cache.h"
+#include "arc_cache.h"
+#include "frc_cache.h"
 
-/*this class is for checking if ArcCache algorithm is working properly and doesn't break some basic rules
+/* this class is for checking if ArcCache algorithm is working properly and doesn't break some basic rules
  * to use, just instead of using checkOutPageArcCache and then deactArcCache call checkInput with number of next
  * page (dont need to initialize)
  *
@@ -34,7 +33,6 @@
  * */
 
 typedef struct {
-
     HashTableInt T1, T2, B1, B2;
 } CacheLog;
 
@@ -62,19 +60,20 @@ typedef struct {
     CacheLog old;
     CacheLog new;
     int c;
-    bool answer;
     int page;
     int p;
+    bool answer;
     bool is_fcr;
 } Checker;
 
-Checker initializeChecker(const ArcCache * cache);
-Checker initializeFcrChecker(const FcrCache * cache);
-void setAnswer(Checker * ch, bool ans, int page);
-CheckResult checkCacheResult(Checker * ch, const ArcCache * cache);
-CheckResult checkCacheFcrResult(Checker * ch, const FcrCache * cache);
-void destructChecker(Checker * ch);
+Checker initializeChecker(const ArcCache *cache);
+Checker initializeFcrChecker(const FcrCache *cache);
+void setAnswer(Checker *ch, bool ans, int page);
+CheckResult checkCacheResult(Checker *ch, const ArcCache * cache);
+CheckResult checkCacheFcrResult(Checker *ch, const FcrCache *cache);
+void destructChecker(Checker *ch);
 
-CheckResult checkInput(ArcCache * cache, int page, bool print_cache);
-CheckResult checkInputFcr(FcrCache * cache, int page, bool print_cache);
+CheckResult checkInput(ArcCache *cache, int page, bool print_cache);
+CheckResult checkInputFcr(FcrCache *cache, int page, bool print_cache);
+
 #endif //FIBONACHY_NIM_AUTOCHECKER_H

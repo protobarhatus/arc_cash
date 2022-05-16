@@ -1,19 +1,19 @@
-/*
-This module contains a bunch of utilities for creating and operating with
-an ARC cache directory, performing the DBL(2c) replacement policy. Basically,
-the directory consists of 4 doubly-linked cyclic lists (DirList type) with
-ability to transfer nodes between each of them. The lists are implemented in
-a cache-friendly style, all the the nodes are stored in a common node array
-(ComArr type), connections between them are provided with the index system.
-Every node contains a pointer to a data structure called PageId, which can
-represent any possible standardized cached piece of information. Total lists
-capacity is strictly 2c - an attempt to push more nodes will lead to an
-immediate error. Free nodes are stored in the same directory and ordered as
-a separate single-linked list, which provides the fastest possible way of
-getting fresh nodes.
-*/
+#ifndef CACHEDIR_INCLUDED
+#define CACHEDIR_INCLUDED
 
-#pragma once
+/* This module contains a bunch of utilities for creating and operating with
+ * an ARC cache directory, performing the DBL(2c) replacement policy. Basically,
+ * the directory consists of 4 doubly-linked cyclic lists (DirList type) with
+ * ability to transfer nodes between each of them. The lists are implemented in
+ * a cache-friendly style, all the the nodes are stored in a common node array
+ * (ComArr type), connections between them are provided with the index system.
+ * Every node contains a pointer to a data structure called PageId, which can
+ * represent any possible standardized cached piece of information. Total lists
+ * capacity is strictly 2c - an attempt to push more nodes will lead to an
+ * immediate error. Free nodes are stored in the same directory and ordered as
+ * a separate single-linked list, which provides the fastest possible way of
+ * getting fresh nodes.
+ * */
 
 #include <malloc.h>
 #include <string.h>
@@ -93,3 +93,5 @@ DirListIterator lastDirList(const DirList *list);       // ...and the tail's one
 DirListIterator iterateDirList(const ComArr *common_arr, DirListIterator idx);      // get the iterator of the next node in its list
 PageId *nodeData(ComArr *common_arr, DirListIterator idx);      // get the PageId pointer through the iterator of the node
 bool isInDirList(DirListIterator idx, const DirList *list);     // check the belonging of some node to some list
+
+#endif
