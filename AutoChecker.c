@@ -150,7 +150,8 @@ CheckResult checkInput(ArcCache *cache, int page, bool print) {
     Checker checker = initializeChecker(cache);
     setAnswer(&checker, checkOutPageArcCache(cache, page), page);
     deactArcCache(cache);
-    printfCacheState(cache);
+    if (print)
+        printfCacheState(cache);
     CheckResult res = checkCacheResult(&checker, cache);
     destructChecker(&checker);
     return res;
@@ -159,7 +160,8 @@ CheckResult checkInput(ArcCache *cache, int page, bool print) {
 CheckResult checkInputFcr(FcrCache *cache, int page, bool print_cache) {
     Checker checker = initializeFcrChecker(cache);
     setAnswer(&checker, checkOutPageFcrCache(cache, page), page);
-    printfFcrCacheState(cache);
+    if (print_cache)
+        printfFcrCacheState(cache);
     CheckResult res = checkCacheFcrResult(&checker, cache);
     destructChecker(&checker);
     return res;
