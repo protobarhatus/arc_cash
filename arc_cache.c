@@ -1,5 +1,7 @@
 #include "arc_cache.h"
+
 typedef HashMapIntDlitIterator PageLoc;
+
 static int min(int a, int b);
 static int max(int a, int b);
 static Dlit iterData(PageLoc iter);
@@ -7,8 +9,6 @@ static bool isPagelocInDirList(ArcCache *cache, PageLoc x, const DirList *dir);
 static int replacePages(ArcCache *cache, int page, PageLoc loc);
 static void addNewPageToT1(ArcCache *cache, PageId page);
 static void deletePageFromDBL(ArcCache *cache, DirList *list, Dlit page);
-
-
 
 ArcCache defaultArcCache(int c, int hashmap_length) {
     ArcCache res;
