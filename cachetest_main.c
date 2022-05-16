@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
     res_file = fopen("test_results.txt", "a");
     if (strcmp(argv[1], "all") == 0) {
         for (int i = 0; i < NTESTS; ++i) {
-            fprintf(res_file, "\n\n\n%s:", test_names[i]);
+            fprintf(res_file, "[[[%s]]]:", test_names[i]);
             run_test(i, &res_file);
         }
 
@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
         bool found = false;
         for (int j = 0; j < NTESTS; ++j) {
             if (strcmp(test_names[j], argv[i]) == 0) {
-                fprintf(res_file, "\n\n\n%s:", test_names[j]);
+                fprintf(res_file, "[[[%s]]]:", test_names[j]);
                 run_test(j, &res_file);
                 found = true;
                 break;
