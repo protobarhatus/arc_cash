@@ -11,7 +11,6 @@ typedef Page PageRef;
 MAKE_LIST(Page, STRUCT, STRUCT)
 MAKE_PAIR(Int, SIMPLE, SIMPLE, ListPageIterator, SIMPLE, STRUCT)
 MAKE_LIST(PairIntListPageIterator, SIMPLE, STRUCT)
-
 MAKE_HASHMAP(Int, SIMPLE, SIMPLE, ListPageIterator, SIMPLE, STRUCT)
 
 typedef struct {
@@ -20,9 +19,9 @@ typedef struct {
     int size;
 } LRUCache;
 
-void addPageLRUCache(LRUCache * cache, PageRef page);
-bool checkOutPageLRUCache(LRUCache * cache, int page, char ** page_data);
+void addPageLRUCache(LRUCache *cache, PageRef page);
+bool checkOutPageLRUCache(LRUCache *cache, int page, char **page_data);
 LRUCache defaultLRUCache(int cache_size, int hash_awaylable_amount);
-void destructLRUCache(LRUCache * cache);
+void destructLRUCache(LRUCache *cache);
 
-#endif //FIBONACHY_NIM_LRU_CACHE_H
+#endif // FIBONACHY_NIM_LRU_CACHE_H
