@@ -151,6 +151,7 @@ bool checkOutPageArcCache(ArcCache * cache, int page) {
     else {
 
         Dlit loc = iterData(iter);
+        
         if (isInDirList(loc, &cache->T1) || isInDirList(loc, &cache->T2)) {
 
             moveNodeToBegin(&cache->T2, loc);
@@ -159,7 +160,8 @@ bool checkOutPageArcCache(ArcCache * cache, int page) {
         }
         if (isInDirList(loc, &cache->B1)) {
 
-            //ARC miss and DBL(c) hit
+            //ARC miss and DBL(2c) hit
+            cache->p = min(cache->c, cache->p + max(sizeDirList(&cache->B2) / sizeDirList(&cache->B1), 1));
             int free_adr = replacePages(cache, page, iter);
             moveNodeToBegin(&cache->T2, loc);
             cache->prepared_line = &cache->cache_line[free_adr * LINE_SIZE];
@@ -168,7 +170,8 @@ bool checkOutPageArcCache(ArcCache * cache, int page) {
         }
         if (isInDirList(loc, &cache->B2)) {
 
-            //ARC miss and DBL(c) hit
+            //ARC miss and DBL(2c) hit
+            cache->p = max(0, cache->p - max(sizeDirList(&cache->B1) / sizeDirList(&cache->B2), 1));
             int free_adr = replacePages(cache, page, iter);
             moveNodeToBegin(&cache->T2, loc);
             cache->prepared_line = &cache->cache_line[free_adr * LINE_SIZE];
