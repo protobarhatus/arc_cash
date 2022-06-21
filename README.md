@@ -30,8 +30,8 @@ First of all, to use the automatic test generator, you can just launch `./testge
   Whisper test            | *whisper*                 | Same as noise test, but the pool is much smaller (1000 identifiers)
   Sets test (far)         | *sets-far*                | Requests are raken from a small fixed-sized set (100-700 ids), every 2000-14000 requests the set is changed to an another one, which is almost certainly different
   Sets test (close)       | *sets-close*              | Same as sets test (far), but the global request pool contains only 1500 ids, so the new set often intersects with the previous one
-  Outbursts test (far)    | *outburst-far*            | Requests are taken from a fixed pool with 300 ids, but every 10-60'th request is an outburst (totally random, almost certainy unique request)
-  Outbursts test (close)  | *outburst-close*          | Same as outbursts test (far), but the outbursts take place every 2-8 requests
+  Outbursts test (far)    | *outbursts-far*            | Requests are taken from a fixed pool with 300 ids, but every 10-60'th request is an outburst (totally random, almost certainy unique request)
+  Outbursts test (close)  | *outbursts-close*          | Same as outbursts test (far), but the outbursts take place every 2-8 requests
   Sets & Outbursts        | *sets-outbursts*          | Straight combination of sets (close) and outbursts (close)
   Base pulsation          | *base-pulse*              | Requests are taken from the set of 300 ids, but 10-40 of them are changed every request, plus every 2-9 request is an outburst and the total id pool size is about 1200 ids 
   Range pulsation         | *diap-pulse*              | Every 2000-14000 requests set is changing to a different one (total pool size is ~1200-1500 ids) and the amount of ids in the set is changing: +(4-11) every request while set's size is below 600, then -(6-12) every request while set's size is above 200 and so on (while pulsating new set members are random, old ones do not change)

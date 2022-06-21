@@ -15,9 +15,9 @@ int main() {
     testSetsFar();
     printf("\n- sets test (close)");
     testSetsClose();
-    printf("\n- outburst test (close)");
+    printf("\n- outbursts test (close)");
     testOutburstsClose();
-    printf("\n- outburst test (far)");
+    printf("\n- outbursts test (far)");
     testOutburstsFar();
     printf("\n- sets+outbursts test");
     testSetsOutbursts();

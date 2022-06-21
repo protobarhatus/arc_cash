@@ -134,7 +134,7 @@ void testOutburstsClose() {
     for (int cache_size = 4, iter = 0; cache_size < 17000; cache_size *= 2, ++iter) {
         int reqs = 0;
         FILE *outbursts_close = NULL;
-        sprintf(file_name, "testpool/%d-%d.tst", OUTBURST_C, iter);
+        sprintf(file_name, "testpool/%d-%d.tst", OUTBURSTS_C, iter);
         outbursts_close = fopen(file_name, "w");
         assert(outbursts_close);
 
@@ -163,7 +163,7 @@ void testOutburstsFar() {
     for (int cache_size = 4, iter = 0; cache_size < 17000; cache_size *= 2, ++iter) {
         int reqs = 0;
         FILE *outbursts_far = NULL;
-        sprintf(file_name, "testpool/%d-%d.tst", OUTBURST_F, iter);
+        sprintf(file_name, "testpool/%d-%d.tst", OUTBURSTS_F, iter);
         outbursts_far = fopen(file_name, "w");
         assert(outbursts_far);
 

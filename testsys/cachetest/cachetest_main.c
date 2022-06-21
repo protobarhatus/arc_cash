@@ -4,7 +4,7 @@
 
 int main(int argc, char *argv[]) {
     char test_names [10][48] = {"dead", "noise", "whisper", "sets-far",
-    "sets-close", "outburst-close", "outburst-far", "sets-outbursts",
+    "sets-close", "outbursts-close", "outbursts-far", "sets-outbursts",
     "base-pulse", "diap-pulse"};
     FILE *res_file = NULL;
 
