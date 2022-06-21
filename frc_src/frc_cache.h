@@ -1,14 +1,11 @@
 #ifndef FIBONACHY_NIM_FRC_CACHE_H
 #define FIBONACHY_NIM_FRC_CACHE_H
 
+#include  "../shared/modes.h"
 #include "hashtable/hashmap.h"
 #include "../shared/Page/Page.h"
 #include "../shared/cachedir/cachedir.h"
 #include "../arc_src/arc_cache.h"    // для обьявления типа хэш-таблицы и т.п.
-
-#define FRC_CP_RATIO 2
-#define DEMONSTRATION_MODE
-// #define FLAW_CONTROL
 
 /* FrcCache is similar to ArcCache, but it has a bit less adaptive policy
  * So the internal parametr p should be given from outside

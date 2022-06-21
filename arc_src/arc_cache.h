@@ -2,11 +2,9 @@
 #define FIBONACHY_NIM_ARC_cache_H
 
 #include "hashtable/hashmap.h"
+#include  "../shared/modes.h"
 #include "../shared/Page/Page.h"
 #include "../shared/cachedir/cachedir.h"
-
-#define DEMONSTRATION_MODE
-// #define FLAW_CONTROL
 
 /*ArcCache emulates working of cache with adaptive replacement policy
  * detailed description of algorithm is available here http://theory.stanford.edu/~megiddo/pdf/IEEE_COMPUTER_0404.pdf

@@ -2,11 +2,10 @@
 #define FIBONACHY_NIM_LRU_CACHE_H
 
 #include <assert.h>
+#include  "../shared/modes.h"
 #include "../shared/Page/Page.h"
 #include "hashtable/hashmap.h"
 #include "list/list.h"
-
-#define DEMONSTRATION_MODE
 
 typedef Page Page_Ref;
 typedef Page PageRef;

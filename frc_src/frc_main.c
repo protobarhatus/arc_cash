@@ -39,6 +39,7 @@ int main(int argc, char *argv[]) {
 #endif
 
     destructFrcCache(&cache);
+#ifndef FLAW_CONTROL
 #ifdef DEMONSTRATION_MODE
     output_file = fopen(argv[1], "a");
     assert(output_file);
@@ -46,6 +47,7 @@ int main(int argc, char *argv[]) {
     fclose(output_file);
 #else
     printf("%d", hits);
+#endif
 #endif
     return 0;
 }

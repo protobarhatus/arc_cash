@@ -1,0 +1,3 @@
+// #define FLAW_CONTROL
+#define DEMONSTRATION_MODE
+#define FRC_CP_RATIO 2

@@ -48,7 +48,7 @@ int main(int argc, char *argv[]) {
             sprintf(path, "testpool/%s", argv[i]);
             user_file = fopen(path, "r");
             if (user_file == NULL) {
-                fprintf(res_file, "\n\n%s: no such data file in the <tests> directory\n\n", argv[i]);
+                fprintf(res_file, "\n\n%s: no such data file in the <testpool> directory\n\n", argv[i]);
                 continue;
             }
 
