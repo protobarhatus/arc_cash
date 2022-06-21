@@ -7,7 +7,7 @@
     do {                                                                    \
         printf("\n%s : %s : %d", __FILE__, __PRETTY_FUNCTION__, __LINE__);  \
         printf(comment_str);                                                \
-    } while (0);
+    } while (0)
 
 static DirListIterator insertBeforeNS(DirList *list, DirListIterator idx, const PageId *page);
 static DirListIterator insertAfterNS(DirList *list, DirListIterator idx, const PageId *page);
