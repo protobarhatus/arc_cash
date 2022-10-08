@@ -54,17 +54,17 @@ int main(int argc, char *argv[]) {
 
             fprintf(res_file, "<<<%s>>>:", argv[i]);
             fprintf(res_file, "\n\nLRU performance:\n\nCache capacity           Hits          Hit ratio (%%)\n");
-            sprintf(com_line, "./LRU testres.log < testpool/%s", argv[i]);
+            sprintf(com_line, "./lru testres.log < testpool/%s", argv[i]);
             fclose(res_file);
             system(com_line);
             res_file = fopen("testres.log", "a");
             fprintf(res_file, "\n\n\nFRC performance:\n\nCache capacity           Hits          Hit ratio (%%)\n");
-            sprintf(com_line, "./FRC testres.log < testpool/%s", argv[i]);
+            sprintf(com_line, "./frc testres.log < testpool/%s", argv[i]);
             fclose(res_file);
             system(com_line);
             res_file = fopen("testres.log", "a");
             fprintf(res_file, "\n\n\nARC performance:\n\nCache capacity           Hits          Hit ratio (%%)\n");
-            sprintf(com_line, "./ARC testres.log < testpool/%s", argv[i]);
+            sprintf(com_line, "./arc testres.log < testpool/%s", argv[i]);
             fclose(res_file);
             system(com_line);
             res_file = fopen("testres.log", "a");
